@@ -22,6 +22,4 @@ for i in range(20):
             print("baudrate:115200 bits:8 parity:0 stop:0 ---check Successfully")
 
 uart_A.deinit()
-uart_B.deinit()
-del uart_A
-del uart_B
+

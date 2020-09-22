@@ -7,6 +7,9 @@
 # 4. Click on the green run arrow button below to run the script!
 
 import sensor, image, time, lcd
+from fpioa_manager import fm
+from machine import UART
+from board import board_info
 import screen, note
 
 def init():
@@ -18,16 +21,19 @@ def init():
     sensor.skip_frames(time = 2000)     # Wait for settings take effect.
     sensor.set_vflip(True)
     sensor.run(1)
+    fm.register(board_info.PIN15, fm.fpioa.UART1_TX, force=True)
+    fm.register(board_info.PIN17, fm.fpioa.UART1_RX, force=True)
 
 
 #初始化
 init()
 clock = time.clock()                # Create a clock object to track the FPS.
+uart_A = UART(UART.UART1, 115200,8,0,1, timeout=1000, read_buf_len=4096)
 
 #参数设定
 roi = (60,110,200,120)
 judge_offset = 20
-note_offset = 30
+note_offset = 15
 
 #循环
 while(True):
@@ -41,4 +47,7 @@ while(True):
 
     lcd.display(img)
     lcd.draw_string(5, 5, str(clock.fps()), lcd.GREEN)
-    lcd.draw_string(130, 5, str(keys_state[0])+" "+str(keys_state[1])+" "+str(keys_state[2])+" "+str(keys_state[3]), lcd.GREEN)
+    write_str = "B"+str(keys_state[0])+str(keys_state[1])+str(keys_state[2])+str(keys_state[3])+"E"
+    lcd.draw_string(130, 5, write_str, lcd.GREEN)
+    uart_A.write(write_str)
+    print(write_str)
