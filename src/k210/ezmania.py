@@ -33,7 +33,7 @@ uart_A = UART(UART.UART1, 115200,8,0,1, timeout=1000, read_buf_len=4096)
 #参数设定
 roi = (60,110,200,120)
 judge_offset = 20
-note_offset = 15
+note_offset = 20
 
 #循环
 while(True):
